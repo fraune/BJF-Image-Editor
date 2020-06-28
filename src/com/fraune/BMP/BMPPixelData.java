@@ -3,7 +3,7 @@ package com.fraune.BMP;
 import java.io.IOException;
 import java.io.InputStream;
 
-public class BMPPixelData {
+public class BMPPixelData implements BMPFileSection {
 
 	private byte[] imageData;
 
@@ -12,7 +12,8 @@ public class BMPPixelData {
 		inputStream.read(imageData);
 	}
 
-	public byte[] getImageData() {
+	@Override
+	public byte[] getAll() {
 		return imageData;
 	}
 }

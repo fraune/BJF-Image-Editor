@@ -12,7 +12,7 @@ public class BMPFile {
 	private BMPHeader header;
 	private BMPInfoHeader infoHeader;
 	private BMPColorTable colorTable;
-	private BMPPixelData pixelData;
+	private BMPFileSection pixelData;
 
 	public BMPFile(File bmpFile) {
 		try (InputStream inputStream = new FileInputStream(bmpFile)) {

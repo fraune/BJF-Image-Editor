@@ -2,12 +2,11 @@ package com.fraune.BMP;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
 
-public class BMPInfoHeader {
+public class BMPInfoHeader implements BMPFileSection {
 
-//	private static final int infoHeaderByteCount = 40;
+	private final int infoHeaderByteCount = 40;
+
 	private final int sizeByteCount = 4;
 	private final int widthByteCount = 4;
 	private final int heightByteCount = 4;
@@ -20,7 +19,20 @@ public class BMPInfoHeader {
 	private final int colorsUsedByteCount = 4;
 	private final int importantColorsByteCount = 4;
 
-//	private final byte[] headerBytes = new byte[headerByteCount];
+	private final int sizeOffset = 0;
+	private final int widthOffset = sizeOffset + sizeByteCount;
+	private final int heightOffset = widthOffset + widthByteCount;
+	private final int planesOffset = heightOffset + heightByteCount;
+	private final int bitsPerPixelOffset = planesOffset + planesByteCount;
+	private final int compressionOffset = bitsPerPixelOffset + bitsPerPixelByteCount;
+	private final int imageSizeOffset = compressionOffset + compressionByteCount;
+	private final int xPixelsPerMOffset = imageSizeOffset + imageSizeByteCount;
+	private final int yPixelsPerMOffset = xPixelsPerMOffset + xPixelsPerMByteCount;
+	private final int colorsUsedOffset = yPixelsPerMOffset + yPixelsPerMByteCount;
+	private final int importantColorsOffset = colorsUsedOffset + colorsUsedByteCount;
+
+	private final byte[] infoHeaderBytes = new byte[infoHeaderByteCount];
+
 	private final byte[] sizeBytes = new byte[sizeByteCount];
 	private final byte[] widthBytes = new byte[widthByteCount];
 	private final byte[] heightBytes = new byte[heightByteCount];
@@ -46,17 +58,19 @@ public class BMPInfoHeader {
 	private int importantColors;
 
 	public BMPInfoHeader(InputStream inputStream) throws IOException {
-		inputStream.read(sizeBytes);
-		inputStream.read(widthBytes);
-		inputStream.read(heightBytes);
-		inputStream.read(planesBytes);
-		inputStream.read(bitsPerPixelBytes);
-		inputStream.read(compressionBytes);
-		inputStream.read(imageSizeBytes);
-		inputStream.read(xPixelsPerMBytes);
-		inputStream.read(yPixelsPerMBytes);
-		inputStream.read(colorsUsedBytes);
-		inputStream.read(importantColorsBytes);
+		inputStream.read(infoHeaderBytes);
+
+		System.arraycopy(infoHeaderBytes, sizeOffset, sizeBytes, 0, sizeByteCount);
+		System.arraycopy(infoHeaderBytes, widthOffset, widthBytes, 0, widthByteCount);
+		System.arraycopy(infoHeaderBytes, heightOffset, heightBytes, 0, heightByteCount);
+		System.arraycopy(infoHeaderBytes, planesOffset, planesBytes, 0, planesByteCount);
+		System.arraycopy(infoHeaderBytes, bitsPerPixelOffset, bitsPerPixelBytes, 0, bitsPerPixelByteCount);
+		System.arraycopy(infoHeaderBytes, compressionOffset, compressionBytes, 0, compressionByteCount);
+		System.arraycopy(infoHeaderBytes, imageSizeOffset, imageSizeBytes, 0, imageSizeByteCount);
+		System.arraycopy(infoHeaderBytes, xPixelsPerMOffset, xPixelsPerMBytes, 0, xPixelsPerMByteCount);
+		System.arraycopy(infoHeaderBytes, yPixelsPerMOffset, yPixelsPerMBytes, 0, yPixelsPerMByteCount);
+		System.arraycopy(infoHeaderBytes, colorsUsedOffset, colorsUsedBytes, 0, colorsUsedByteCount);
+		System.arraycopy(infoHeaderBytes, importantColorsOffset, importantColorsBytes, 0, importantColorsByteCount);
 
 		size = BMPFile.bytesToInt(sizeBytes);
 		width = BMPFile.bytesToInt(widthBytes);
@@ -69,6 +83,11 @@ public class BMPInfoHeader {
 		yPixelsPerM = BMPFile.bytesToInt(yPixelsPerMBytes);
 		colorsUsed = BMPFile.bytesToInt(colorsUsedBytes);
 		importantColors = BMPFile.bytesToInt(importantColorsBytes);
+	}
+
+	@Override
+	public byte[] getAll() {
+		return infoHeaderBytes;
 	}
 
 	public int getSize() {
