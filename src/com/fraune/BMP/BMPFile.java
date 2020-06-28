@@ -12,7 +12,7 @@ public class BMPFile {
 	private BMPHeader header;
 	private BMPInfoHeader infoHeader;
 	private BMPColorTable colorTable;
-	private BMPFileSection pixelData;
+	private BMPPixelData pixelData;
 
 	public BMPFile(File bmpFile) {
 		try (InputStream inputStream = new FileInputStream(bmpFile)) {
@@ -25,6 +25,22 @@ public class BMPFile {
 		} catch (IOException ex) {
 			ex.printStackTrace();
 		}
+	}
+
+	public BMPHeader getHeader() {
+		return header;
+	}
+
+	public BMPInfoHeader getInfoHeader() {
+		return infoHeader;
+	}
+
+	public BMPColorTable getColorTable() {
+		return colorTable;
+	}
+
+	public BMPPixelData getPixelData() {
+		return pixelData;
 	}
 
 	protected static int bytesToInt(byte[] bytes) {
