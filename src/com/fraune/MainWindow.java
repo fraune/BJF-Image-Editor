@@ -10,12 +10,12 @@ public class MainWindow extends JFrame {
 	private static final long serialVersionUID = 1L;
 
 	public MainWindow() {
-		setSize(1000, 400);
+		setSize(1000, 800);
 		setTitle("BJF's Image Editor");
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 
 //		BMPFile file = new BMPFile(new File("data/test3.bmp"));
-		File imageFile = new File("data/test1.bmp");
+		File imageFile = new File("/Users/brandonf/Programming/github/BJF-Image-Editor/data/test1.bmp");
 		ImagePanel ip = new ImagePanel(imageFile);
 		EditorPanel ep = new EditorPanel(imageFile);
 
