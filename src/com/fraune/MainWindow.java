@@ -10,7 +10,7 @@ public class MainWindow extends JFrame {
 	private static final long serialVersionUID = 1L;
 
 	public MainWindow() {
-		setSize(1000, 800);
+		setSize(1200, 800);
 		setTitle("BJF's Image Editor");
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 
