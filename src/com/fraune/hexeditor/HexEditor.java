@@ -3,6 +3,8 @@ package com.fraune.hexeditor;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Font;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -47,12 +49,20 @@ public class HexEditor extends JPanel {
 		editorScrollPane.setViewportView(mainView);
 		add(editorScrollPane, BorderLayout.CENTER);
 	}
-
-	public int setHexContent(InputStream input) throws IOException {
-		return setHexContent(input, 0, 0);
+	
+	public void setContent(File file) {
+		try (InputStream inputStream = new FileInputStream(file)) {
+			setContent(inputStream);
+		} catch (IOException ex) {
+			ex.printStackTrace();
+		}
 	}
 
-	public int setHexContent(InputStream inputStream, int offset, int readSize) throws IOException {
+	public int setContent(InputStream input) throws IOException {
+		return setContent(input, 0, 0);
+	}
+
+	public int setContent(InputStream inputStream, int offset, int readSize) throws IOException {
 		if (offset < 0) {
 			throw new IllegalArgumentException("Cannot accept a negative offset.");
 		}
@@ -68,8 +78,7 @@ public class HexEditor extends JPanel {
 			textAreaEditor.append("   ");
 		}
 
-		int byteRead;
-		int i;
+		int i, byteRead;
 		for (i = 1 + offset; ((byteRead = inputStream.read()) != -1) && (readToEndOfStream || (i <= readSize + offset)); i++) {
 			textAreaEditor.append(String.format("%02X ", byteRead));
 			if (i % hexBytesWidth == 0) {
