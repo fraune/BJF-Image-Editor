@@ -53,7 +53,7 @@ public class ControlPanel extends JPanel {
 			String location = textFieldLocation.getText();
 			File imageFile = new File(location);
 			ip.setImageFile(imageFile);
-			ep.setImageFile(imageFile);
+			ep.setFile(imageFile);
 		});
 
 		add(labelLocation, BorderLayout.WEST);
