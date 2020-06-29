@@ -3,8 +3,6 @@ package com.fraune.hexeditor;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Font;
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -17,11 +15,10 @@ public class HexEditor extends JPanel {
 	private static final long serialVersionUID = 1L;
 	private final int hexBytesWidth = 16;
 	private Font font = new Font("Courier New", Font.PLAIN, 16);
-	private File file;
 	private JTextArea textAreaEditor, textAreaRowOffset;
+	private JScrollPane editorScrollPane;
 
-	public HexEditor(File file) {
-		this.file = file;
+	public HexEditor() {
 		setLayout(new BorderLayout());
 
 		JPanel mainView = new JPanel();
@@ -46,29 +43,49 @@ public class HexEditor extends JPanel {
 		add(textAreaColumnOffset, BorderLayout.NORTH);
 		mainView.add(textAreaEditor, BorderLayout.CENTER);
 
-		JScrollPane editorScrollPane = new JScrollPane(mainView);
+		editorScrollPane = new JScrollPane(mainView);
 		editorScrollPane.setViewportView(mainView);
 		add(editorScrollPane, BorderLayout.CENTER);
-		setHexContent(this.file);
-
 	}
 
-	public void setHexContent(File file) {
-		textAreaRowOffset.setText(String.format("00000000: %n"));
+	public int setHexContent(InputStream input) throws IOException {
+		return setHexContent(input, 0, 0);
+	}
+
+	public int setHexContent(InputStream inputStream, int offset, int readSize) throws IOException {
+		if (offset < 0) {
+			throw new IllegalArgumentException("Cannot accept a negative offset.");
+		}
+
+		boolean readToEndOfStream = readSize <= 0;
+
+		int rowOffset = (offset / hexBytesWidth) * hexBytesWidth;
+		textAreaRowOffset.setText(String.format("%08X: %n", rowOffset));
 		textAreaEditor.setText("");
 
-		try (InputStream inputStream = new FileInputStream(file)) {
-			int byteRead;
-			for (int i = 1; (byteRead = inputStream.read()) != -1; i++) {
-				textAreaEditor.append(String.format("%02X ", byteRead));
-				if (i % hexBytesWidth == 0) {
-					textAreaRowOffset.append(String.format("%08X: %n", i));
-					textAreaEditor.append(System.lineSeparator());
-				}
-			}
-		} catch (IOException ex) {
-			ex.printStackTrace();
+		int columnOffset = offset % hexBytesWidth;
+		for (int i = 0; i < columnOffset; i++) {
+			textAreaEditor.append("   ");
 		}
+
+		int byteRead;
+		int i;
+		for (i = 1 + offset; ((byteRead = inputStream.read()) != -1) && (readToEndOfStream || (i <= readSize + offset)); i++) {
+			textAreaEditor.append(String.format("%02X ", byteRead));
+			if (i % hexBytesWidth == 0) {
+				textAreaRowOffset.append(String.format("%08X: %n", i));
+				textAreaEditor.append(System.lineSeparator());
+			}
+		}
+
+		// Scroll back to top
+		javax.swing.SwingUtilities.invokeLater(new Runnable() {
+			public void run() {
+				editorScrollPane.getVerticalScrollBar().setValue(0);
+			}
+		});
+
+		return i;
 	}
 
 }

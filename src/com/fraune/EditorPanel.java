@@ -2,6 +2,9 @@ package com.fraune;
 
 import java.awt.BorderLayout;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 
 import javax.swing.ButtonGroup;
 import javax.swing.JPanel;
@@ -34,7 +37,8 @@ public class EditorPanel extends JPanel {
 		panelEditorStyle.add(radioButtonSectioned);
 		panelEditorStyle.add(radioButtonIntelligent);
 
-		hexEditor = new HexEditor(imageFile);
+		hexEditor = new HexEditor();
+		setImageFile(imageFile);
 
 		// add components to panel
 		add(panelEditorStyle, BorderLayout.NORTH);
@@ -42,6 +46,10 @@ public class EditorPanel extends JPanel {
 	}
 
 	protected void setImageFile(File imageFile) {
-		hexEditor.setHexContent(imageFile);
+		try (InputStream inputStream = new FileInputStream(imageFile)) {
+			hexEditor.setHexContent(inputStream);
+		} catch (IOException ex) {
+			ex.printStackTrace();
+		}
 	}
 }
