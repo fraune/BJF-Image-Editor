@@ -1,6 +1,6 @@
 package com.fraune;
 
-import java.awt.FlowLayout;
+import java.awt.BorderLayout;
 import java.io.File;
 
 import javax.swing.JButton;
@@ -15,42 +15,49 @@ public class ControlPanel extends JPanel {
 	private static final long serialVersionUID = 1L;
 
 	public ControlPanel(ImagePanel ip, EditorPanel ep) {
-		setLayout(new FlowLayout());
+		setLayout(new BorderLayout());
 
+		// WEST
 		JLabel labelLocation = new JLabel("Image location");
-		JTextField textBoxLocation = new JTextField("~/");
+
+		// CENTER
+		JTextField textFieldLocation = new JTextField("/Users/brandonf/Programming/github/BJF-Image-Editor/data/test1.bmp");
+
+		// EAST
 		JButton buttonPickImage = new JButton("Pick image");
 		JButton buttonLoadImage = new JButton("Load image");
 		JButton buttonSaveImage = new JButton("Save image");
-		JFileChooser jfc = new JFileChooser();
+
+		JPanel panelImageButtons = new JPanel();
+		panelImageButtons.add(buttonPickImage);
+		panelImageButtons.add(buttonLoadImage);
+		panelImageButtons.add(buttonSaveImage);
+
+		JFileChooser imageFileChooser = new JFileChooser();
 
 		buttonPickImage.addActionListener(click -> {
-			System.out.println("clicked");
-			jfc.showOpenDialog(this);
+			imageFileChooser.showOpenDialog(this);
 		});
 
-		jfc.addActionListener(filePicked -> {
-			System.out.println("picked file");
-			String path = jfc.getSelectedFile().getAbsolutePath();
-			textBoxLocation.setText(path);
+		imageFileChooser.addActionListener(filePicked -> {
+			File selectedFile = imageFileChooser.getSelectedFile();
+			if (selectedFile != null) {
+				String path = selectedFile.getAbsolutePath();
+				textFieldLocation.setText(path);
+			}
 		});
 
 		buttonLoadImage.addActionListener(click -> {
-			String location = textBoxLocation.getText();
-			if (location.endsWith(".bmp") == false) {
-				JOptionPane.showMessageDialog(this, "Only BMP file types are offically supported.", "Warning",
-						JOptionPane.WARNING_MESSAGE);
-				return;
-			}
+			JOptionPane.showMessageDialog(this, "Only BMP file types are offically supported.", "Warning", JOptionPane.WARNING_MESSAGE);
+
+			String location = textFieldLocation.getText();
 			File imageFile = new File(location);
 			ip.setImageFile(imageFile);
 			ep.setImageFile(imageFile);
 		});
 
-		add(labelLocation);
-		add(textBoxLocation);
-		add(buttonPickImage);
-		add(buttonLoadImage);
-		add(buttonSaveImage);
+		add(labelLocation, BorderLayout.WEST);
+		add(textFieldLocation, BorderLayout.CENTER);
+		add(panelImageButtons, BorderLayout.EAST);
 	}
 }
