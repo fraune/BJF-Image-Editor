@@ -1,7 +1,6 @@
 package com.fraune;
 
 import java.awt.GridLayout;
-import java.io.File;
 
 import javax.swing.JPanel;
 
