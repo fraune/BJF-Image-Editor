@@ -5,7 +5,7 @@ import java.io.InputStream;
 
 public class BMPHeader implements BMPFileSection {
 
-	private final int headerByteCount = 14;
+	public static final int headerByteCount = 14;
 
 	private final int signatureByteCount = 2;
 	private final int fileSizeByteCount = 4;
