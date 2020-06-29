@@ -7,8 +7,10 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
+import javax.swing.ButtonGroup;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 
@@ -22,12 +24,30 @@ public class EditorPanel extends JPanel {
 	public EditorPanel(File imageFile) {
 		setLayout(new BorderLayout());
 
+		// initialize components
 		editor.setFont(font);
 		editor.setWrapStyleWord(true);
-		JScrollPane jsp = new JScrollPane(editor);
+		JScrollPane editorScrollPane = new JScrollPane(editor);
 
-		add(new JLabel("asdf"), BorderLayout.NORTH);
-		add(jsp, BorderLayout.CENTER);
+		JPanel panelEditorStyle = new JPanel();
+		ButtonGroup buttonGroupEditorStyle = new ButtonGroup();
+		JRadioButton radioButtonRaw = new JRadioButton("Raw");
+		JRadioButton radioButtonSectioned = new JRadioButton("Sectioned");
+		JRadioButton radioButtonIntelligent = new JRadioButton("Intelligent");
+
+		radioButtonRaw.setSelected(true);
+
+		buttonGroupEditorStyle.add(radioButtonRaw);
+		buttonGroupEditorStyle.add(radioButtonSectioned);
+		buttonGroupEditorStyle.add(radioButtonIntelligent);
+
+		panelEditorStyle.add(radioButtonRaw);
+		panelEditorStyle.add(radioButtonSectioned);
+		panelEditorStyle.add(radioButtonIntelligent);
+
+		// add components to panel
+		add(panelEditorStyle, BorderLayout.NORTH);
+		add(editorScrollPane, BorderLayout.CENTER);
 
 		this.setImageFile(imageFile);
 	}

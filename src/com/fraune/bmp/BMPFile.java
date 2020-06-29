@@ -1,4 +1,4 @@
-package com.fraune.BMP;
+package com.fraune.bmp;
 
 import java.io.File;
 import java.io.FileInputStream;

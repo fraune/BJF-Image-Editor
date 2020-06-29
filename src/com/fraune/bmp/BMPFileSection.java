@@ -1,4 +1,4 @@
-package com.fraune.BMP;
+package com.fraune.bmp;
 
 public interface BMPFileSection {
 
