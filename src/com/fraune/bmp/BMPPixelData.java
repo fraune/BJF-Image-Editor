@@ -5,15 +5,15 @@ import java.io.InputStream;
 
 public class BMPPixelData implements BMPFileSection {
 
-	private byte[] imageData;
+	private byte[] pixelData;
 
 	public BMPPixelData(InputStream inputStream, int imageSize) throws IOException {
-		imageData = new byte[imageSize];
-		inputStream.read(imageData);
+		pixelData = new byte[imageSize];
+		inputStream.read(pixelData);
 	}
 
 	@Override
 	public byte[] getAll() {
-		return imageData;
+		return pixelData;
 	}
 }

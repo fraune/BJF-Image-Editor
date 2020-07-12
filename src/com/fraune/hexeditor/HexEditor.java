@@ -8,6 +8,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
@@ -21,6 +22,10 @@ public class HexEditor extends JPanel {
 	private JScrollPane editorScrollPane;
 
 	public HexEditor() {
+		this(null);
+	}
+
+	public HexEditor(String title) {
 		setLayout(new BorderLayout());
 
 		JPanel mainView = new JPanel();
@@ -41,15 +46,18 @@ public class HexEditor extends JPanel {
 		textAreaEditor = new JTextArea();
 		textAreaEditor.setFont(font);
 
+		if (title != null) {
+			add(new JLabel(title), BorderLayout.NORTH);
+		}
 		mainView.add(textAreaRowOffset, BorderLayout.WEST);
-		add(textAreaColumnOffset, BorderLayout.NORTH);
+		mainView.add(textAreaColumnOffset, BorderLayout.NORTH);
 		mainView.add(textAreaEditor, BorderLayout.CENTER);
 
 		editorScrollPane = new JScrollPane(mainView);
 		editorScrollPane.setViewportView(mainView);
 		add(editorScrollPane, BorderLayout.CENTER);
 	}
-	
+
 	public void setContent(File file) {
 		try (InputStream inputStream = new FileInputStream(file)) {
 			setContent(inputStream);

@@ -1,6 +1,7 @@
 package com.fraune;
 
 import java.awt.BorderLayout;
+import java.awt.Component;
 import java.awt.GridLayout;
 import java.io.ByteArrayInputStream;
 import java.io.File;
@@ -67,53 +68,65 @@ public class EditorPanel extends JPanel {
 	private void setupEditorView() {
 		switch (selectedButton.getText()) {
 		case "Raw":
+			System.out.println("Raw editor selected");
 			HexEditor hexEditor = new HexEditor();
 			hexEditor.setContent(file);
+
+			emptyEditorView();
 			add(hexEditor, BorderLayout.CENTER);
 			break;
 		case "Sectioned":
-			System.out.println("Sectioned");
+			System.out.println("Sectioned editor selected");
 			// Assume file is a valid BMP
 			JPanel editorView = new JPanel();
-			editorView.setLayout(new GridLayout(3, 1));
+			GridLayout gridLayout = new GridLayout(4, 1);
+			editorView.setLayout(gridLayout);
 
-			HexEditor editorHeader = new HexEditor();
-			HexEditor editorInfoHeader = new HexEditor();
-//			HexEditor editorColorTable = new HexEditor();
-			HexEditor editorPixelData = new HexEditor();
+			HexEditor editorHeader = new HexEditor("Header");
+			HexEditor editorInfoHeader = new HexEditor("Info Header");
+			HexEditor editorColorTable = new HexEditor("Color Table");
+			HexEditor editorPixelData = new HexEditor("Pixel Data");
 
 			BMPFile bmp = new BMPFile(file);
 
 			InputStream headerStream = new ByteArrayInputStream(bmp.getHeader().getAll());
-			InputStream infoHeaderStream = new ByteArrayInputStream(bmp.getHeader().getAll());
-//			InputStream colorTableStream = new ByteArrayInputStream(bmp.getHeader().getAll());
-			InputStream pixelDataStream = new ByteArrayInputStream(bmp.getHeader().getAll());
+			InputStream infoHeaderStream = new ByteArrayInputStream(bmp.getInfoHeader().getAll());
+			InputStream colorTableStream = new ByteArrayInputStream(bmp.getColorTable().getAll());
+			InputStream pixelDataStream = new ByteArrayInputStream(bmp.getPixelData().getAll());
 
 			try {
 				editorHeader.setContent(headerStream, 0, BMPHeader.headerByteCount);
 				editorInfoHeader.setContent(infoHeaderStream, 0, BMPInfoHeader.infoHeaderByteCount);
+				editorColorTable.setContent(colorTableStream, 0, bmp.getColorTable().getAll().length);
 				editorPixelData.setContent(pixelDataStream);
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 
 			editorView.add(editorHeader);
 			editorView.add(editorInfoHeader);
+			editorView.add(editorColorTable);
 			editorView.add(editorPixelData);
-//			editorView.add(new JLabel("test"));
-//			editorView.add(new JLabel("test"));
-//			editorView.add(new JLabel("test"));
 
-			BorderLayout layout = (BorderLayout) getLayout();
-			remove(layout.getLayoutComponent(BorderLayout.CENTER));
+			emptyEditorView();
 			add(editorView, BorderLayout.CENTER);
-			super.repaint();
 			break;
 		case "Intelligent":
+			System.out.println("Intelligent editor selected");
 			break;
 		default:
+			System.out.println("???");
 			break;
+		}
+
+		revalidate();
+	}
+
+	private void emptyEditorView() {
+		BorderLayout layout = (BorderLayout) getLayout();
+		Component lastComponent = layout.getLayoutComponent(BorderLayout.CENTER);
+		if (lastComponent != null) {
+			remove(lastComponent);
 		}
 	}
 
