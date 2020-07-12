@@ -34,6 +34,7 @@ public class ControlPanel extends JPanel {
 		panelImageButtons.add(buttonSaveImage);
 
 		JFileChooser imageFileChooser = new JFileChooser();
+		imageFileChooser.setCurrentDirectory(new File("data"));
 
 		buttonPickImage.addActionListener(click -> {
 			imageFileChooser.showOpenDialog(this);
