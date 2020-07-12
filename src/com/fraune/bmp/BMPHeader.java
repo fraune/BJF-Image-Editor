@@ -6,6 +6,7 @@ import java.io.InputStream;
 public class BMPHeader implements BMPFileSection {
 
 	public static final int headerByteCount = 14;
+	private int offset;
 
 	private final int signatureByteCount = 2;
 	private final int fileSizeByteCount = 4;
@@ -28,7 +29,8 @@ public class BMPHeader implements BMPFileSection {
 	private int fileSize;
 	private int dataOffset;
 
-	public BMPHeader(InputStream inputStream) throws IOException {
+	public BMPHeader(int offset, InputStream inputStream) throws IOException {
+		this.offset = offset;
 		inputStream.read(headerBytes);
 
 		System.arraycopy(headerBytes, signatureOffset, signatureBytes, 0, signatureByteCount);
@@ -39,6 +41,11 @@ public class BMPHeader implements BMPFileSection {
 		signature = new String(signatureBytes);
 		fileSize = BMPFile.bytesToInt(fileSizeBytes);
 		dataOffset = BMPFile.bytesToInt(dataOffsetBytes);
+	}
+
+	@Override
+	public int getOffset() {
+		return offset;
 	}
 
 	@Override

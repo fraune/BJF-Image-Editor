@@ -5,11 +5,18 @@ import java.io.InputStream;
 
 public class BMPColorTable implements BMPFileSection {
 
+	private int offset;
 	private byte[] colorTable;
 
-	public BMPColorTable(InputStream inputStream, int size) throws IOException {
+	public BMPColorTable(int offset, InputStream inputStream, int size) throws IOException {
+		this.offset = offset;
 		colorTable = new byte[size];
 		inputStream.read(colorTable);
+	}
+
+	@Override
+	public int getOffset() {
+		return offset;
 	}
 
 	@Override

@@ -6,6 +6,7 @@ import java.io.InputStream;
 public class BMPInfoHeader implements BMPFileSection {
 
 	public static final int infoHeaderByteCount = 40;
+	private int offset;
 
 	private final int sizeByteCount = 4;
 	private final int widthByteCount = 4;
@@ -57,7 +58,8 @@ public class BMPInfoHeader implements BMPFileSection {
 	private int colorsUsed;
 	private int importantColors;
 
-	public BMPInfoHeader(InputStream inputStream) throws IOException {
+	public BMPInfoHeader(int offset, InputStream inputStream) throws IOException {
+		this.offset = offset;
 		inputStream.read(infoHeaderBytes);
 
 		System.arraycopy(infoHeaderBytes, sizeOffset, sizeBytes, 0, sizeByteCount);
@@ -83,6 +85,11 @@ public class BMPInfoHeader implements BMPFileSection {
 		yPixelsPerM = BMPFile.bytesToInt(yPixelsPerMBytes);
 		colorsUsed = BMPFile.bytesToInt(colorsUsedBytes);
 		importantColors = BMPFile.bytesToInt(importantColorsBytes);
+	}
+
+	@Override
+	public int getOffset() {
+		return offset;
 	}
 
 	@Override

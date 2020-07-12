@@ -16,11 +16,15 @@ public class BMPFile {
 
 	public BMPFile(File bmpFile) {
 		try (InputStream inputStream = new FileInputStream(bmpFile)) {
-			header = new BMPHeader(inputStream);
-			infoHeader = new BMPInfoHeader(inputStream);
+			int offset = 0;
+			header = new BMPHeader(offset, inputStream);
+			offset += BMPHeader.headerByteCount;
+			infoHeader = new BMPInfoHeader(offset, inputStream);
+			offset += BMPInfoHeader.infoHeaderByteCount;
 			int colorTableBytes = infoHeader.getBitsPerPixel() >= 8 ? 0 : 4 * infoHeader.getNumberColors();
-			colorTable = new BMPColorTable(inputStream, colorTableBytes);
-			pixelData = new BMPPixelData(inputStream, infoHeader.getImageSize());
+			colorTable = new BMPColorTable(offset, inputStream, colorTableBytes);
+			offset += colorTable.getAll().length;
+			pixelData = new BMPPixelData(offset, inputStream, infoHeader.getImageSize());
 		} catch (IOException ex) {
 			ex.printStackTrace();
 		}

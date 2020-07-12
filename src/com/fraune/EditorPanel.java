@@ -9,7 +9,6 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import javax.swing.ButtonGroup;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 
@@ -95,10 +94,10 @@ public class EditorPanel extends JPanel {
 			InputStream pixelDataStream = new ByteArrayInputStream(bmp.getPixelData().getAll());
 
 			try {
-				editorHeader.setContent(headerStream, 0, BMPHeader.headerByteCount);
-				editorInfoHeader.setContent(infoHeaderStream, 0, BMPInfoHeader.infoHeaderByteCount);
-				editorColorTable.setContent(colorTableStream, 0, bmp.getColorTable().getAll().length);
-				editorPixelData.setContent(pixelDataStream);
+				editorHeader.setContent(headerStream, bmp.getHeader().getOffset(), BMPHeader.headerByteCount);
+				editorInfoHeader.setContent(infoHeaderStream, bmp.getInfoHeader().getOffset(), BMPInfoHeader.infoHeaderByteCount);
+				editorColorTable.setContent(colorTableStream, bmp.getColorTable().getOffset(), bmp.getColorTable().getAll().length);
+				editorPixelData.setContent(pixelDataStream, bmp.getPixelData().getOffset(), bmp.getPixelData().getAll().length);
 			} catch (IOException e) {
 				e.printStackTrace();
 			}

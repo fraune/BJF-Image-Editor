@@ -5,11 +5,18 @@ import java.io.InputStream;
 
 public class BMPPixelData implements BMPFileSection {
 
+	private int offset;
 	private byte[] pixelData;
 
-	public BMPPixelData(InputStream inputStream, int imageSize) throws IOException {
+	public BMPPixelData(int offset, InputStream inputStream, int imageSize) throws IOException {
+		this.offset = offset;
 		pixelData = new byte[imageSize];
 		inputStream.read(pixelData);
+	}
+
+	@Override
+	public int getOffset() {
+		return offset;
 	}
 
 	@Override
