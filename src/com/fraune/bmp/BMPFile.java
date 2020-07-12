@@ -18,9 +18,8 @@ public class BMPFile {
 		try (InputStream inputStream = new FileInputStream(bmpFile)) {
 			header = new BMPHeader(inputStream);
 			infoHeader = new BMPInfoHeader(inputStream);
-			if (infoHeader.getBitsPerPixel() < 8) {
-				colorTable = new BMPColorTable(inputStream);
-			}
+			int colorTableBytes = infoHeader.getBitsPerPixel() >= 8 ? 0 : 4 * infoHeader.getNumberColors();
+			colorTable = new BMPColorTable(inputStream, colorTableBytes);
 			pixelData = new BMPPixelData(inputStream, infoHeader.getImageSize());
 		} catch (IOException ex) {
 			ex.printStackTrace();

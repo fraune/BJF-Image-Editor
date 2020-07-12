@@ -5,13 +5,16 @@ import java.io.InputStream;
 
 public class BMPColorTable implements BMPFileSection {
 
-	public BMPColorTable(InputStream inputStream) throws IOException {
-		throw new UnsupportedOperationException("I didn't test low bit-depth color data");
+	private byte[] colorTable;
+
+	public BMPColorTable(InputStream inputStream, int size) throws IOException {
+		colorTable = new byte[size];
+		inputStream.read(colorTable);
 	}
 
 	@Override
 	public byte[] getAll() {
-		throw new UnsupportedOperationException("I didn't test low bit-depth color data");
+		return colorTable;
 	}
 
 }
