@@ -90,6 +90,30 @@ public class BMPInfoHeader implements BMPFileSection {
 		return infoHeaderBytes;
 	}
 
+	/**
+	 * @return number of colors used
+	 */
+	public int getNumberColors() {
+		int result;
+		switch (bitsPerPixel) {
+		case 1:
+			result = 1;
+			break;
+		case 4:
+		case 8:
+		case 16:
+		case 24:
+			result = 2 ^ bitsPerPixel;
+			break;
+		default:
+			System.out.println("bits per pixel was an unexpected value");
+			result = -1;
+			break;
+		}
+
+		return result;
+	}
+
 	public int getSize() {
 		return size;
 	}
