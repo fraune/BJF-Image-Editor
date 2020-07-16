@@ -14,9 +14,8 @@ public class MainWindow extends JFrame {
 		setTitle("BJF's Image Editor");
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 
-//		BMPFile file = new BMPFile(new File("data/test3.bmp"));
 		File imageFile = new File("/Users/brandonf/Programming/github/BJF-Image-Editor/data/dog3.bmp");
-		ImagePanel ip = new ImagePanel(imageFile);
+		ImagePanel ip = new ImagePanel(imageFile, true);
 		EditorPanel ep = new EditorPanel(imageFile);
 
 		ControlPanel controls = new ControlPanel(ip, ep);
